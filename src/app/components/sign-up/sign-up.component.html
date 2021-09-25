@@ -1,0 +1,53 @@
+<div>
+    <div class="d-flex justify-content-center">
+        <div class="col-md-6 mt-5 mb-3">
+            <h2 class="text-center">Creer Compte</h2>
+            <div class="my-3" style="text-align: center;">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">new account</button>
+              </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #f="ngForm">
+            <div class="mb-3">
+              <label for="firstName" class="col-form-label">firstName</label>
+              <input required minlength="3" maxlength="30" ngModel name="firstName" #firstName="ngModel" [(ngModel)]="user.firstName"  id="firstName" type="text" class="form-control">
+            <div class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">
+              <div *ngIf="firstName.errors?.required">Ce champ required!</div>
+              <div *ngIf="firstName.errors?.minlength">min 3 chars!</div>
+              <div *ngIf="firstName.errors?.maxlength">max 30 chars!</div>
+            </div>
+            </div>
+            <div class="mb-3">
+              <label for="lastName" class="col-form-label">lastName:</label>
+              <input [(ngModel)]="user.lastName" name="lastName" id="lastName" type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label for="email" class="col-form-label">email:</label>
+              <input [(ngModel)]="user.email" name="email" id="email" type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label for="password" class="col-form-label">password:</label>
+              <input [(ngModel)]="user.password" name="password" id="password" type="text" class="form-control">
+            </div>
+  
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" [disabled]="!f.valid" (click)="createAccount()">Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </div>
