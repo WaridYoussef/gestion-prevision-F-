@@ -1,53 +1,93 @@
 <div>
-    <div class="d-flex justify-content-center">
-        <div class="col-md-6 mt-5 mb-3">
-            <h2 class="text-center">Creer Compte</h2>
-            <div class="my-3" style="text-align: center;">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">new account</button>
-              </div>
-        </div>
+  <div class="d-flex justify-content-center">
+    <div class="col-md-6 mt-5 mb-3">
+      <h2 class="text-center">Créer Compte</h2>
+      <div class="my-3" style="text-align: center;">
+        <button (click)="clearInputs()" type="button" class="btn btn-primary" data-bs-toggle="modal"
+          data-bs-target="#exampleModal" data-bs-whatever="@mdo">nouveau compte</button>
+      </div>
     </div>
+  </div>
 </div>
 
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New Account</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form #f="ngForm">
-            <div class="mb-3">
-              <label for="firstName" class="col-form-label">firstName</label>
-              <input required minlength="3" maxlength="30" ngModel name="firstName" #firstName="ngModel" [(ngModel)]="user.firstName"  id="firstName" type="text" class="form-control">
-            <div class="alert alert-danger" *ngIf="firstName.touched && !firstName.valid">
-              <div *ngIf="firstName.errors?.required">Ce champ required!</div>
-              <div *ngIf="firstName.errors?.minlength">min 3 chars!</div>
-              <div *ngIf="firstName.errors?.maxlength">max 30 chars!</div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-light">
+        <h5 class="modal-title" id="exampleModalLabel">nouveau compte</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #f="ngForm">
+          <div class="mb-3">
+            <label for="firstName" class="col-form-label">Prénom:</label>
+            <input required ngModel name="firstName" #firstName="ngModel" [(ngModel)]="user.firstName" id="firstName"
+              type="text" class="form-control">
+            <div *ngIf="firstName.touched && !firstName.valid">
+              <div *ngIf="firstName.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
             </div>
+          </div>
+          <div class="mb-3">
+            <label for="lastName" class="col-form-label">Nom:</label>
+            <input required ngModel [(ngModel)]="user.lastName" #lastName="ngModel" name="lastName" id="lastName"
+              type="text" class="form-control">
+            <div *ngIf="lastName.touched && !lastName.valid">
+              <div *ngIf="lastName.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
             </div>
-            <div class="mb-3">
-              <label for="lastName" class="col-form-label">lastName:</label>
-              <input [(ngModel)]="user.lastName" name="lastName" id="lastName" type="text" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleSelect1" class="form-label">select Manager</label>
+             <select required class="form-select"  id="exampleSelect1" 
+             name="manager" #manager="ngModel" [(ngModel)]="user.managerId">
+             <option></option>
+              <option  
+               *ngFor="let manager of managers" [ngValue]="manager.userId" >{{manager.firstName}}
+              </option>
+            </select>
+
+            <div *ngIf="manager.touched && !manager.valid">
+              <div *ngIf="manager.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
             </div>
-            <div class="mb-3">
-              <label for="email" class="col-form-label">email:</label>
-              <input [(ngModel)]="user.email" name="email" id="email" type="text" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="col-form-label">email:</label>
+            <input required ngModel [(ngModel)]="user.email" #email="ngModel" name="email"
+              pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" id="email" type="text" class="form-control">
+            <div *ngIf="email.touched && !email.valid">
+              <div *ngIf="email.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
+              <div *ngIf="email.errors?.pattern" style="color: red;">*Il doit être sous la forme d'un e-mail</div>
             </div>
-            <div class="mb-3">
-              <label for="password" class="col-form-label">password:</label>
-              <input [(ngModel)]="user.password" name="password" id="password" type="text" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="col-form-label">mot de passe:</label>
+            <input ngModel required [(ngModel)]="user.password" #password="ngModel" name="password" id="password"
+              type="password" class="form-control">
+            <div *ngIf="password.touched && !password.valid">
+              <div *ngIf="password.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
             </div>
-  
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" [disabled]="!f.valid" (click)="createAccount()">Ajouter</button>
-        </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="confirmpassword" class="col-form-label">Confirmez le mot de passe:</label>
+            <input type="password" [(ngModel)]="confirmPass" id="confirmpassword" name="confirmpassword"  class="form-control" required #confirmpassword="ngModel" pattern="{{ password.value }}" />
+            <div *ngIf=" confirmpassword.invalid && confirmpassword.touched" class="">
+              <div *ngIf="confirmpassword.errors?.required" style="color: red;"> *Ce champ obligatoire! </div>
+              <div *ngIf="confirmpassword.errors?.pattern" style="color: red;"> * Le mot de passe et la confirmation du mot de passe ne correspondent pas!</div>
+            </div>
+           </div>
+         
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-primary" [disabled]="!f.valid" (click)="createAccount()"
+          data-bs-dismiss="modal">Ajouter</button>
       </div>
     </div>
   </div>
+</div>

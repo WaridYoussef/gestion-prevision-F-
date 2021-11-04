@@ -1,3 +1,5 @@
+import { DashBoardAffectationsComponent } from './components/dash-board-affectations/dash-board-affectations.component';
+import { ChangePassComponent } from './components/change-pass/change-pass.component';
 import { ListAffectationsComponent } from './components/list-affectations/list-affectations.component';
 import { ListUserComponent } from './components/list-user/list-user.component';
 import { NgModule } from "@angular/core";
@@ -38,8 +40,19 @@ const routes : Routes = [
         canActivate: [AuthGuard, AdminGuard]
        },
        {
+        path: "dashboard",
+        component: DashBoardAffectationsComponent,
+        canActivate: [AuthGuard, AdminGuard]
+       },
+
+       {
        path: "affectationUser",
         component:AffectationUserComponent,
+        canActivate: [AuthGuard]
+       },
+        {
+       path: "changePass",
+        component:ChangePassComponent,
         canActivate: [AuthGuard]
        },
        {

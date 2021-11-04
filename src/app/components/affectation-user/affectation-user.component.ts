@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { AffectationService } from 'src/app/affectation.service';
 import { Affectation } from 'src/app/models/affectation';
 import { TokenService } from 'src/app/services/token.service';
@@ -24,7 +25,14 @@ export class AffectationUserComponent implements OnInit {
   name= "";
   affectations: Affectation[] = [];
 
-  constructor(private affectationService: AffectationService, private tokenService: TokenService) { }
+  constructor(private affectationService: AffectationService, private tokenService: TokenService, private spinner: NgxSpinnerService) {
+    this.spinner.show();
+
+    setTimeout(() => {
+      /** spinner ends after 5 seconds */
+      this.spinner.hide();
+    }, 500);
+   }
 
   ngOnInit(): void {
     this.name  = this.tokenService.getName()!;

@@ -6,6 +6,7 @@ export interface User {
     lastName: string;
     admin: boolean;
     email: string;
+    managerId: String;
     password:string;
 
 }

@@ -1,5 +1,5 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { ListUserComponent } from './components/list-user/list-user.component';
@@ -17,7 +17,13 @@ import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 //search
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-
+//toast
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { ToastrModule } from 'ngx-toastr';
+//spinner
+import { NgxSpinnerModule } from "ngx-spinner";
+import { ChangePassComponent } from './components/change-pass/change-pass.component';
+import { DashBoardAffectationsComponent } from './components/dash-board-affectations/dash-board-affectations.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +36,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     ListActivityComponent,
     AffectationUserComponent,
     SignUpComponent,
+    ChangePassComponent,
+    DashBoardAffectationsComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,13 +47,18 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     NgxPaginationModule,
     Ng2SearchPipeModule,
     HttpClientModule,
-    CommonModule
+    ToastrModule.forRoot(),
+    BrowserAnimationsModule,
+    CommonModule,
+    NgxSpinnerModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: JwtInterceptor,
     multi: true
   }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+
 })
 export class AppModule { }

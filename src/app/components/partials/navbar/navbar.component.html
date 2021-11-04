@@ -8,38 +8,57 @@
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul *ngIf="isAdmin" class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" routerLink="/user">Users
+            <a class="nav-link" routerLinkActive="active" routerLink="/user">Collaborateurs
               <span class="visually-hidden">(current)</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" routerLink="/activity">Activities
+            <a class="nav-link" routerLinkActive="active" routerLink="/activity">Activités
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link">{{ name }}</a>
+            <a class="nav-link" routerLinkActive="active" routerLink="/dashboard">Tableau de bord
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link">"{{ name }}"</a>
           </li>
         </ul>
 
          <!--ila makanch admin hadchi-->
-         <ul *ngIf="!isAdmin" class="navbar-nav me-auto">
+         <ul *ngIf="currentUser && !isAdmin" class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" aria-disabled="true">{{ name }}</a>
+            <a class="nav-link" routerLinkActive="active" routerLink="/affectationUser">mes Affectations</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-disabled="true">"{{ name }}"</a>
+          </li>
+      </ul>
+
+      <ul class="navbar-nav me-auto">
+        <li></li>
       </ul>
 
       <!-- creer compte -->
       <div>
       <ul *ngIf="!currentUser" class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLinkActive="active" routerLink="/signUp" aria-disabled="true">Creer compte</a>
+          <a class="nav-link" routerLinkActive="active" routerLink="/signUp" aria-disabled="true">créer compte</a>
         </li>
     </ul>
   </div>
 
+  <div>
+    <ul *ngIf="currentUser" class="navbar-nav me-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" routerLink="/changePass" aria-disabled="true">Paramètres du compte</a>
+      </li>
+  </ul>
+</div>
+
         <ul class="navbar-nav ml-auto">
-          <li *ngIf="!currentUser" class="nav-item"><a routerLinkActive="active" routerLink="/login" class="nav-link">Login</a></li>
-          <li *ngIf="currentUser" class="nav-item" ><button (click)="logout()" class="nav-link btn-logout">Logout</button></li>  
+          <li *ngIf="!currentUser" class="nav-item"><a routerLinkActive="active" routerLink="/login" class="nav-link">Se connecter</a></li>
+          <li *ngIf="currentUser" class="nav-item" ><button (click)="logout()" class="nav-link btn-logout">Se déconnecter</button></li>  
         </ul>
       </div>
      

@@ -1,22 +1,22 @@
 <div>
   <div class="d-flex justify-content-center">
     <div class="col-md-6 mt-5">
-        <h2 class="text-center">List of users</h2>
+        <h2 class="text-center">Liste des collaborateurs</h2>
     </div>
   </div>
 
   <div class="input-group my-5">
-    <span class="input-group-text" id="basic-addon1">Search</span>
-    <input type="text" class="form-control" placeholder="Enter 'name' to search" [(ngModel)]="name" name="name" aria-describedby="basic-addon1"  (ngModelChange)="[Search(), page = 1]">
+    <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+    <input type="text" class="form-control" placeholder="Entrez le nom à rechercher" [(ngModel)]="name" name="name" aria-describedby="basic-addon1"  (ngModelChange)="[Search(), page = 1]">
   </div>
 
   
     <div class="my-3" style="text-align: right;">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" (click)="clearInputs()">new</button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" (click)="clearInputs()">Nouveau Collaborateur</button>
     </div>
 </div>
 
-  <div class="row">
+  <div class="row mt-5">
     <pagination-controls class="text-center my-pagination" (pageChange)="page = $event"></pagination-controls>
       <div class="col-md-6" *ngFor="let user of users | 
       paginate: { itemsPerPage: 6,
@@ -24,8 +24,8 @@
         totalItems: totalLength }">
           <div class="card border-primary mb-3">
               <div class="card-header"><h4 class="card-title"> {{ user.firstName }} {{ user.lastName }}
-               <span class="float-end"> <button class="btn btn-info" [routerLink]="['/affectation', user.userId ]"
-                [queryParams]="{ firstName: user.firstName, lastName: user.lastName, id: user.id }">plus...</button> </span>
+               <span class="float-end"> <button class="btn btn-primary" [routerLink]="['/affectation', user.userId ]"
+                [queryParams]="{ firstName: user.firstName, lastName: user.lastName, id: user.id }">Plus...</button> </span>
               </h4>
                  
               </div>
@@ -37,8 +37,8 @@
                   <li class="list-group-item text-center fs-6 text-primary" *ngIf="user.admin == true"><strong>Manager</strong> </li>
                   
                   <li class="list-group-item text-center">
-                    <button type="button" class="btn btn-primary" (click)="edit(user)" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-whatever="@mdo">edit</button>
-                    <button class="btn btn-dark mx-2" data-bs-toggle="modal" (click)="edit(user)" data-bs-target="#deleteModal" data-bs-whatever="@mdo">Delete</button>
+                    <button type="button" class="btn btn-warning" (click)="edit(user)" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-whatever="@mdo">Éditer</button>
+                    <button class="btn btn-danger mx-2" data-bs-toggle="modal" (click)="edit(user)" data-bs-target="#deleteModal" data-bs-whatever="@mdo">Effacer</button>
                   </li>
                 </ul>
               </div>
@@ -52,48 +52,68 @@
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New User</h5>
+        <div class="modal-header bg-primary text-light">
+          <h5 class="modal-title" id="exampleModalLabel">Nouveau Collaborateur</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form #f="ngForm">
-            <div class="mb-3">
-              <label for="firstName" class="col-form-label">firstName</label>
+            <div class="text-center">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" [(ngModel)]="user.admin" name="admin" id="inlineRadio1" [value]=false>
+              <label class="form-check-label" for="inlineRadio1">Inginieur</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" [(ngModel)]="user.admin" name="admin" (click)="clearManagerInput()" id="inlineRadio2" [value]=true>
+              <label class="form-check-label" for="inlineRadio2">Manager</label>
+            </div>
+          </div>
+            <div class="mb-2">
+              <label for="firstName" class="col-form-label">Prénom:</label>
               <input required ngModel name="firstName" #firstName="ngModel" [(ngModel)]="user.firstName"  id="firstName" type="text" class="form-control">
             <div *ngIf="firstName.touched && !firstName.valid">
-              <div *ngIf="firstName.errors?.required" style="color: red;">*Ce champ required!</div>
+              <div *ngIf="firstName.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
             </div>
             </div>
-            <div class="mb-3">
-              <label for="lastName" class="col-form-label">lastName:</label>
+            <div class="mb-2">
+              <label for="lastName" class="col-form-label">Nom:</label>
               <input required [(ngModel)]="user.lastName" name="lastName" #lastName="ngModel" id="lastName" type="text" class="form-control">
               <div *ngIf="lastName.touched && !lastName.valid">
-                <div *ngIf="lastName.errors?.required" style="color: red;">*Ce champ required!</div>
+                <div *ngIf="lastName.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
               </div>
             </div>
-            <div class="mb-3">
+
+            <div class="mb-2">
               <label for="email" class="col-form-label">email:</label>
-              <input required [(ngModel)]="user.email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+              <input required [(ngModel)]="user.email" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                #email="ngModel" id="email" type="email" class="form-control">
               <div *ngIf="email.touched && !email.valid">
-                <div *ngIf="email.errors?.required" style="color: red;">*this field is required!</div>
-                <div *ngIf="email.errors?.pattern" style="color: red;">*should be email!</div>
+                <div *ngIf="email.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
+                <div *ngIf="email.errors?.pattern" style="color: red;">*Il doit être sous la forme d'un e-mail</div>
               </div>
             </div>
-            <div class="mb-3">
-              <label for="password" class="col-form-label">password:</label>
-              <input required [(ngModel)]="user.password" name="password" #password="ngModel" id="password" type="text" class="form-control">
+            <div class="mb-2">
+              <label for="password" class="col-form-label">mot de passe:</label>
+              <input required [(ngModel)]="user.password" name="password" #password="ngModel" id="password" type="password" class="form-control">
               <div *ngIf="password.touched && !password.valid">
-                <div *ngIf="password.errors?.required" style="color: red;">*this field is required!</div>
+                <div *ngIf="password.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
               </div>
             </div>
+
+            <div class="mb-2">
+              <label for="confirmpassword" class="col-form-label">Confirmez le mot de passe:</label>
+              <input type="password" [(ngModel)]="confirmPass" id="confirmpassword" name="confirmpassword"  class="form-control" required #confirmpassword="ngModel" pattern="{{ password.value }}" />
+              <div *ngIf=" confirmpassword.invalid && confirmpassword.touched" class="">
+                <div *ngIf="confirmpassword.errors?.required" style="color: red;"> *Ce champ obligatoire! </div>
+                <div *ngIf="confirmpassword.errors?.pattern" style="color: red;"> * Le mot de passe et la confirmation du mot de passe ne correspondent pas.</div>
+              </div>
+             </div>
   
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" [disabled]="!f.valid" (click)="createUser()">Ajouter</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-primary" [disabled]="!f.valid" (click)="[createUser(),  page=1]">Ajouter</button>
         </div>
       </div>
     </div>
@@ -105,41 +125,50 @@
 <div class="modal fade" data-bs-backdrop="static"  id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Update Colab</h5>
+      <div class="modal-header  bg-warning text-light">
+        <h5 class="modal-title" id="editModalLabel">Modifier Collaborateur</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="getAllUsers()" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form #fe="ngForm">
-         <div class="mb-3">
-              <label for="firstName" class="col-form-label">firstName</label>
+         <div class="mb-2">
+              <label for="firstName" class="col-form-label">Prénom:</label>
               <input required ngModel name="firstName" #first="ngModel" [(ngModel)]="user.firstName"  id="firstName" type="text" class="form-control">
             <div *ngIf="first.touched && !first.valid">
-              <div *ngIf="first.errors?.required" style="color: red;">*Ce champ required!</div>
+              <div *ngIf="first.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
             </div>
             </div>
-            <div class="mb-3">
-              <label for="lastName" class="col-form-label">lastName:</label>
+            <div class="mb-2">
+              <label for="lastName" class="col-form-label">Nom:</label>
               <input required [(ngModel)]="user.lastName" name="lastName" #last="ngModel" id="lastName" type="text" class="form-control">
               <div *ngIf="last.touched && !last.valid">
-                <div *ngIf="last.errors?.required" style="color: red;">*Ce champ required!</div>
+                <div *ngIf="last.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
               </div>
             </div>
-            <div class="mb-3">
+            <div class="mb-2">
               <label for="email" class="col-form-label">email:</label>
-              <input required [(ngModel)]="user.email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+              <input required [(ngModel)]="user.email" name="email" pattern="[a-zA-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                #email2="ngModel" id="email" type="email" class="form-control">
               <div *ngIf="email2.touched && !email2.valid">
-                <div *ngIf="email2.errors?.required" style="color: red;">*this field is required!</div>
-                <div *ngIf="email2.errors?.pattern" style="color: red;">*should be email!</div>
+                <div *ngIf="email2.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
+                <div *ngIf="email2.errors?.pattern" style="color: red;">*Il doit être sous la forme d'un e-mail</div>
               </div>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" [(ngModel)]="user.admin" name="admin" id="inlineRadio1" [value]=false>
+              <label class="form-check-label" for="inlineRadio1">Inginieur</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" [(ngModel)]="user.admin" (click)="clearManagerInput()" name="admin" id="inlineRadio2" [value]=true>
+              <label class="form-check-label" for="inlineRadio2">Manager</label>
             </div>
          
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="getAllUsers()">Close</button>
-        <button type="button" class="btn btn-warning" (click)="updateUser(user)" [disabled]="!fe.valid" data-bs-dismiss="modal">Modifier</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="getAllUsers()">Fermer</button>
+        <button type="button" class="btn btn-warning" (click)="updateUser(user)"  data-bs-dismiss="modal" [disabled]="!fe.valid">Modifier</button>
       </div>
     </div>
   </div>
@@ -151,18 +180,18 @@
 <div class="modal fade"  id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Info:</h5>
+      <div class="modal-header  bg-danger text-light">
+        <h5 class="modal-title" id="editModalLabel">Attention</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="getAllUsers()" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>
-          All of his 'Affectations' will be deleted
+          Toutes ses 'Affectations' seront supprimées
         </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="getAllUsers()">Close</button>
-        <button type="button" class="btn btn-warning" (click)="deleteUser(user)"  data-bs-dismiss="modal">Delete</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="getAllUsers()">Fermer</button>
+        <button type="button" class="btn btn-danger" (click)="deleteUser(user)"  data-bs-dismiss="modal">Supprimer</button>
       </div>
     </div>
   </div>

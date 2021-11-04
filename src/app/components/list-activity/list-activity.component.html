@@ -1,17 +1,17 @@
 <div>
     <div class="d-flex justify-content-center">
       <div class="col-md-6 mt-5">
-          <h2 class="text-center">List of activities</h2>
+          <h2 class="text-center">Liste des Activités</h2>
       </div>
     </div>
      
     <div class="input-group my-5">
-      <span class="input-group-text" id="basic-addon1">Search</span>
-      <input type="text" class="form-control" placeholder="Enter 'Activity Name' to search" [(ngModel)]="activityName" name="activityName" aria-describedby="basic-addon1"  (ngModelChange)="[Search(), page = 1]">
+      <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+      <input type="text" class="form-control" placeholder="Entrez l'activité à rechercher" [(ngModel)]="activityName" name="activityName" aria-describedby="basic-addon1"  (ngModelChange)="[Search(), page = 1]">
     </div>
 
       <div class="my-3" style="text-align: right;">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" (click)="clearactivityInputs()">new Activity</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" (click)="clearactivityInputs()">Nouveau Activité</button>
       </div>
   </div>
   
@@ -22,17 +22,16 @@
            currentPage: page,
           totalItems: totalLength }">
             <div class="card border-primary mb-3">
-                <div class="card-header"><h4 class="card-title text-center"> {{ activity.name }}
-                </h4>
-                   
+                <div class="card-header">
+                  <h4 class="card-title text-center"> {{ activity.name }}</h4>
                 </div>
                 <div class="card-body">
                   
                   <ul class="list-group list-group-flush">
                    
                     <li class="list-group-item text-center">
-                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-whatever="@mdo" (click)="edit(activity)">edit</button>
-                      <button class="btn btn-dark mx-2" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-whatever="@mdo" (click)="edit(activity)">Delete</button>
+                      <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-whatever="@mdo" (click)="edit(activity)">Éditer</button>
+                      <button class="btn btn-danger mx-2" data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-whatever="@mdo" (click)="edit(activity)">Effacer</button>
                     </li>
                   </ul>
                 </div>
@@ -45,24 +44,26 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">New Activity</h5>
+            <div class="modal-header bg-primary text-light">
+              <h5 class="modal-title" id="exampleModalLabel">Nouveau Activité</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <form #f="ngForm">
                 <div class="mb-3">
-                  <label for="city" class="col-form-label">activity_Name</label>
+                  <label for="city" class="col-form-label">nom d'activité:</label>
                   <input required  ngModel name="name" #name="ngModel" [(ngModel)]="activity.name"  id="name" type="text" class="form-control">
                 <div class="alert alert-danger" *ngIf="name.touched && !name.valid">
-                  <div *ngIf="name.errors?.required">Ce champ required!</div>
+                  <div *ngIf="name.errors?.required">*Ce champ obligatoire!</div>
                 </div>
                 </div>
+
+
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" [disabled]="!f.valid" (click)="createActivity()">Ajouter</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+              <button type="button" class="btn btn-primary" [disabled]="!f.valid" (click)="createActivity()" >Ajouter</button>
             </div>
           </div>
         </div>
@@ -74,24 +75,24 @@
 <div class="modal fade" id="editModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editModalLabel">Update Activity</h5>
+        <div class="modal-header  bg-warning text-light">
+          <h5 class="modal-title" id="editModalLabel">Modifier Activité</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="getAllActivities()" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form #f="ngForm">
             <div class="mb-3">
-              <label for="name" class="col-form-label">name</label>
+              <label for="name" class="col-form-label">nom d'activité:</label>
               <input required ngModel name="name" #name2="ngModel" [(ngModel)]="activity.name"  id="name" type="text" class="form-control">
             <div class="alert alert-danger" *ngIf="name2.touched && !name2.valid">
-              <div *ngIf="name2.errors?.required">Ce champ required!</div>
+              <div *ngIf="name2.errors?.required">*Ce champ obligatoire!</div>
             </div>
             </div>
             
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="getAllActivities()" >Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="getAllActivities()" >Fermer</button>
           <button type="button" class="btn btn-warning" [disabled]="!f.valid" (click)="updateActivity(activity)" data-bs-dismiss="modal">Modifier</button>
         </div>
       </div>
@@ -105,18 +106,18 @@
 <div class="modal fade"  id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Info:</h5>
+      <div class="modal-header  bg-danger text-light">
+        <h5 class="modal-title" id="editModalLabel">Attention</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"  aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>
-          All of his 'Affectations' will be deleted
+          Toutes les affectations contenant ces activités seront supprimées.
         </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-warning" (click)="deleteActivity(activity)" data-bs-dismiss="modal">Delete</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-danger" (click)="deleteActivity(activity)" data-bs-dismiss="modal">Supprimer</button>
       </div>
     </div>
   </div>

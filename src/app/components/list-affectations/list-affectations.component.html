@@ -1,23 +1,23 @@
 <div>
   <div class="d-flex justify-content-center">
     <div class="col-md-6 mt-5">
-        <h2 class="text-center">Affectations of: <span class="text-primary">{{firstName}} {{lastName}}</span> </h2>
+        <h2 class="text-center">Affectations de <span class="text-primary">{{firstName}} {{lastName}}</span> </h2>
     </div>
   </div>
    
   <div class="input-group my-5">
-    <span class="input-group-text" id="basic-addon1">Search</span>
-    <input type="text" class="form-control" placeholder="Enter for exemple '2020-W24' to search" aria-describedby="basic-addon1" [(ngModel)]="search" name="search"  (ngModelChange)="[Search(), page = 1]">
+    <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+    <input type="text" class="form-control" placeholder="Entrez par exemple '2020-W24' pour rechercher" aria-describedby="basic-addon1" [(ngModel)]="search" name="search"  (ngModelChange)="[Search(), page = 1]">
   </div>
   
 
     <div class="my-3" style="text-align: right;">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" (click)="clearInputs()">new Affectation</button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" (click)="clearInputs()">Nouveau Affectation</button>
     </div>
 </div>
   <div class="row">
     <pagination-controls *ngIf="isAffectationExist" class="text-center my-pagination" (pageChange)="page = $event"></pagination-controls>
-      <div class="col-md-6" *ngFor="let affectation of affectations | 
+    <div class="col-md-6" *ngFor="let affectation of affectations | 
       paginate: { itemsPerPage: 12,
          currentPage: page,
         totalItems: totalLength }">
@@ -27,9 +27,11 @@
                 
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item text-center fs-2"><strong>{{ affectation.activity_name }}</strong></li>
+                  <li class="list-group-item text-center fs-6"><strong>Description: </strong>{{ affectation.description }}</li>
+
                   <li class="list-group-item text-center">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-whatever="@mdo" (click)="edit(affectation)">edit</button>
-                    <button class="btn btn-dark mx-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-whatever="@mdo" (click)="edit(affectation)">Delete</button>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal" data-bs-whatever="@mdo" (click)="edit(affectation)">Éditer</button>
+                    <button class="btn btn-danger mx-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" data-bs-whatever="@mdo" (click)="edit(affectation)">Effacer</button>
                   </li>
                 </ul>
               </div>
@@ -38,24 +40,33 @@
       <pagination-controls *ngIf="isAffectationExist" class="text-center my-pagination" (pageChange)="page = $event"></pagination-controls>
   </div>
 
+  <div class="alert alert-danger" *ngIf="!isAffectationExist" role="alert">
+    <h4 class="alert-heading">Info!</h4>
+    <hr>
+    <p>Il n'ya pas encore "Affectations".</p>
+    </div>
+
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">New Affectation</h5>
+        <div class="modal-header  bg-primary text-light">
+          <h5 class="modal-title" id="exampleModalLabel">Nouveau Affectation</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form #f="ngForm">
            
             <div class="mb-3" >
-              <label for="exampleSelect1" class="form-label">select Activity</label>
-               <select class="form-select"  id="exampleSelect1"
+              <label for="exampleSelect1" class="form-label">select Activité</label>
+               <select required class="form-select"  id="exampleSelect1" #activity_id="ngModel"
                name="activity_id" [(ngModel)]="affectation.activity_id">
+               <option></option>
                 <option  
                  *ngFor="let activity of activities" [ngValue]="activity.id" >{{activity.name}}</option>
               </select>
-
+              <div *ngIf="activity_id.touched && !activity_id.valid">
+                <div *ngIf="activity_id.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
+              </div>
             </div>
 
             <div class="mb-3" >
@@ -94,10 +105,16 @@
               <label for="semaine" class="col-form-label">semaine</label>
               <input required  ngModel name="semaine" #semaine="ngModel" [(ngModel)]="affectation.semaine"  id="semaine" type="week" class="form-control">
             </div>
+
+            <div class="mb-3">
+              <label for="description" class="col-form-label">description:</label>
+              <textarea  ngModel name="description"  [(ngModel)]="affectation.description"  id="description" type="text" class="form-control"></textarea>
+            </div>
+
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
           <button type="button" class="btn btn-primary" [disabled]="!f.valid" (click)="createAffectation()">Ajouter</button>
         </div>
       </div>
@@ -111,15 +128,15 @@
 <div class="modal fade" id="editModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Update Affectation</h5>
+      <div class="modal-header  bg-warning text-light">
+        <h5 class="modal-title" id="editModalLabel">Modifier Affectation</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="getAffectations()" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form #fe="ngForm">
           <div class="mb-3" >
-            <label for="exampleSelect1" class="form-label">select Activity</label>
-             <select class="form-select"  id="exampleSelect1"
+            <label for="exampleSelect1" class="form-label">select Activité</label>
+             <select required class="form-select"  id="exampleSelect1" #activity_id="ngModel"
              name="activity_id" [(ngModel)]="affectation.activity_id">
               <option  
                *ngFor="let activity of activities" [ngValue]="activity.id" >{{activity.name}}</option>
@@ -164,10 +181,16 @@
             <label for="semaine" class="col-form-label">semaine</label>
             <input required  ngModel name="semaine" #semaine="ngModel" [(ngModel)]="affectation.semaine"  id="semaine" type="week" class="form-control">
           </div>
+
+          <div class="mb-3">
+            <label for="description" class="col-form-label">description:</label>
+            <textarea  ngModel name="description"  [(ngModel)]="affectation.description"  id="description" type="text" class="form-control"></textarea>
+          </div>
+
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="getAffectations()">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="getAffectations()">Fermer</button>
         <button type="button" class="btn btn-warning" data-bs-dismiss="modal" (click)="updateAffectation(affectation)" [disabled]="!fe.valid">Modifier</button>
       </div>
     </div>
@@ -180,18 +203,18 @@
 <div class="modal fade"  id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editModalLabel">Info:</h5>
+      <div class="modal-header  bg-danger text-light">
+        <h5 class="modal-title" id="editModalLabel">Message</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"  aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>
-          Are you sure?
+          Es-tu sûr?
         </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-warning" (click)="deleteAffectation(affectation)" data-bs-dismiss="modal">Delete</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-danger" (click)="deleteAffectation(affectation)" data-bs-dismiss="modal">Suppimer</button>
       </div>
     </div>
   </div>

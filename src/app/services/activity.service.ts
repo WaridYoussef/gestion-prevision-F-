@@ -3,16 +3,20 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Activity } from '../models/activity';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActivityService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
+
+  userId = "";
 
   getAllactivities(): Observable<any>{
-    return this.http.get(`${environment.apiUrl}/activity`)
+    this.userId= this.tokenService.getId()!;
+    return this.http.get(`${environment.apiUrl}/activity/activs/`+this.userId);
    }
  
    saveActivity(data: Activity): Observable<any>{

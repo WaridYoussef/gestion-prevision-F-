@@ -4,6 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { AffectationService } from 'src/app/affectation.service';
 import { Affectation } from 'src/app/models/affectation';
 import { Activity } from 'src/app/models/activity';
+import { UserService } from 'src/app/services/user.service';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-list-affectations',
@@ -34,10 +37,12 @@ export class ListAffectationsComponent implements OnInit {
   affectation = {
     id: 0,
     user_id: this.id,
-    activity_id: 0,
+    activity_id: null,
     mois: "",
     semaine: "",
+    description: "",
     firstName: "",
+    lastName: "",
     activity_name: ""
   };
 
@@ -50,10 +55,12 @@ export class ListAffectationsComponent implements OnInit {
     this.affectation = {
       id: 0,
       user_id: this.id,
-      activity_id: 0,
+      activity_id: null,
       mois: "",
       semaine: "",
+      description:"",
       firstName: "",
+      lastName: "",
       activity_name: ""
     };
   
@@ -62,7 +69,16 @@ export class ListAffectationsComponent implements OnInit {
 
 
 
-  constructor(private affectationService: AffectationService ,private activityService: ActivityService ,private route : ActivatedRoute) { }
+  constructor(private affectationService: AffectationService ,private activityService: ActivityService 
+    ,private route : ActivatedRoute, private userService: UserService, private toastr: ToastrService,
+    private spinner: NgxSpinnerService) { 
+      this.spinner.show();
+
+      setTimeout(() => {
+        /** spinner ends after 0.5 seconds */
+        this.spinner.hide();
+      }, 500);
+     }
 
   ngOnInit(): void {
    
@@ -72,7 +88,6 @@ export class ListAffectationsComponent implements OnInit {
     this.lastName = this.route.snapshot.queryParamMap.get('lastName')!;
     this.getAffectations();
     this.getAllActivities();
-  
   }
 
   getAllActivities(){
@@ -100,7 +115,15 @@ export class ListAffectationsComponent implements OnInit {
       this.affectations= [res, ...this.affectations]
       this.getAffectations();
       this.clearInputs();
-  });
+      this.toastr.success('opération réussie', 'Message', {
+        timeOut: 3000, closeButton : true, positionClass: 'toast-top-right'
+      })
+  },(error) => {
+    this.toastr.error('Affectation existe déjà', 'Message', {
+     timeOut: 3000, closeButton : true, positionClass: 'toast-top-right'
+   })
+   console.log(error);
+ });
   }
 
   edit(affectation : any){
@@ -111,7 +134,16 @@ updateAffectation(affectation: any){
   this.affectationService.updateAffectation(affectation).subscribe((res: Affectation) => {
     this.clearInputs();
     this.getAffectations();
-  }
+    this.toastr.success('opération réussie', 'Message', {
+      timeOut: 3000, closeButton : true, positionClass: 'toast-top-right'
+    })
+  },(error) => {
+    this.getAffectations();
+    this.toastr.error('Affectation existe déjà', 'Message', {
+     timeOut: 3000, closeButton : true, positionClass: 'toast-top-right'
+   })
+   console.log(error);
+ }
   );
 }
 
@@ -121,10 +153,16 @@ deleteAffectation(affectation: any){
     let index = this.affectations.indexOf(affectation);
     this.affectations.splice(index, 1)
     this.getAffectations();
-  })
- 
+    this.toastr.success('opération réussie', 'Message', {
+      timeOut: 3000, closeButton : true, positionClass: 'toast-top-right'
+    })
+  },(error) => {
+    this.getAffectations();
+    this.toastr.error('Il ya un probleme', 'Message', {
+     timeOut: 3000, closeButton : true, positionClass: 'toast-top-right'
+   })
+})
 }
-
 Search(){
   if(this.search == ""){
     this.ngOnInit();

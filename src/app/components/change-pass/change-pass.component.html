@@ -1,0 +1,137 @@
+
+
+
+<!--information of user-->
+
+    <div class="mt-5">
+        <div class="card border-primary mb-3">
+            <div class="card-header"><h4 class="card-title text-primary fs-3"> Informations
+              <span class="float-end">  <button  type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#exampleModal" data-bs-whatever="@mdo">Changer mot de passe</button>
+            </span>
+            </h4>
+               
+            </div>
+            <div class="card-body">
+              
+              <ul class="list-group list-group-flush">
+                
+                <li  class="list-group-item text-center d-inline fs-4">
+                  <strong>Prénom:</strong> {{ user.firstName }}
+                </li> 
+                <li class="list-group-item text-center d-inline fs-4">
+                  <strong>Nom:</strong> {{ user.lastName }}
+                </li>
+                <li class="list-group-item text-center fs-4"><strong>email:</strong> {{ user.email }}</li>
+                <li class="list-group-item text-center fs-4 text-primary" *ngIf="user.admin != true"><strong>Ingenieur</strong> </li>
+                <li class="list-group-item text-center fs-4 text-primary" *ngIf="user.admin == true"><strong>Manager</strong> </li>
+                
+                <li class="list-group-item text-center">
+                  <button type="button" class="btn btn-warning"  data-bs-toggle="modal" data-bs-target="#editModal" data-bs-whatever="@mdo">Modifier vos informations</button>
+                  
+                </li>
+              </ul>
+            </div>
+          </div>
+    </div>      
+ 
+    
+
+
+<!--change password modal-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-light">
+          <h5 class="modal-title" id="exampleModalLabel">nouveau mot de passe</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #f="ngForm">
+
+            <div class="mb-3">
+                <label for="currentPass" class="col-form-label">mot de passe actuel:</label>
+                <input ngModel required [(ngModel)]="changepass.currentPass" #currentPass="ngModel" name="currentPass" id="currentPass"
+                  type="password" class="form-control">
+                <div *ngIf="currentPass.touched && !currentPass.valid">
+                  <div *ngIf="currentPass.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
+                </div>
+              </div>
+
+            <div class="mb-3">
+              <label for="newPass" class="col-form-label">le nouveau mot de passe:</label>
+              <input ngModel required [(ngModel)]="changepass.newPass" #newPass="ngModel" name="newPass" id="newPass"
+                type="password" class="form-control">
+              <div *ngIf="newPass.touched && !newPass.valid">
+                <div *ngIf="newPass.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
+              </div>
+            </div>
+  
+
+            <div class="mb-3">
+                <label for="confirmpassword" class="col-form-label">Confirmez le mot de passe:</label>
+                <input type="password" [(ngModel)]="confirmPass" id="confirmpassword" name="confirmpassword"  class="form-control" required #confirmpassword="ngModel" pattern="{{ newPass.value }}" />
+                <div *ngIf=" confirmpassword.invalid && confirmpassword.touched" class="">
+                  <div *ngIf="confirmpassword.errors?.required" style="color: red;"> *Ce champ obligatoire! </div>
+                  <div *ngIf="confirmpassword.errors?.pattern" style="color: red;"> * Le mot de passe et la confirmation du mot de passe ne correspondent pas!</div>
+                </div>
+               </div>
+             
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+          <button type="button" class="btn btn-primary" [disabled]="!f.valid" (click)="updateUserPass()"
+            data-bs-dismiss="modal">Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+ <!-- edit modal -->
+
+ <div class="modal fade" data-bs-backdrop="static"  id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header  bg-warning text-light">
+        <h5 class="modal-title" id="editModalLabel">Modifier vos informations</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="getUser()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #fe="ngForm">
+         <div class="mb-2">
+              <label for="firstName" class="col-form-label">Prénom:</label>
+              <input required ngModel name="firstName" #first="ngModel" [(ngModel)]="user.firstName"  id="firstName" type="text" class="form-control">
+            <div *ngIf="first.touched && !first.valid">
+              <div *ngIf="first.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
+            </div>
+            </div>
+            <div class="mb-2">
+              <label for="lastName" class="col-form-label">Nom:</label>
+              <input required [(ngModel)]="user.lastName" name="lastName" #last="ngModel" id="lastName" type="text" class="form-control">
+              <div *ngIf="last.touched && !last.valid">
+                <div *ngIf="last.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
+              </div>
+            </div>
+            <div class="mb-2">
+              <label for="email" class="col-form-label">email:</label>
+              <input required [(ngModel)]="user.email" name="email" pattern="[a-zA-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+               #email2="ngModel" id="email" type="email" class="form-control">
+              <div *ngIf="email2.touched && !email2.valid">
+                <div *ngIf="email2.errors?.required" style="color: red;">*Ce champ obligatoire!</div>
+                <div *ngIf="email2.errors?.pattern" style="color: red;">*Il doit être sous la forme d'un e-mail</div>
+              </div>
+            </div>
+         
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="getUser()">Fermer</button>
+        <button type="button" class="btn btn-warning" (click)="updateUser(user)"  data-bs-dismiss="modal" [disabled]="!fe.valid">Modifier</button>
+      </div>
+    </div>
+  </div>
+</div>
