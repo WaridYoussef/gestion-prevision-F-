@@ -9,10 +9,6 @@ import { Affectation } from 'src/app/models/affectation';
 })
 export class DashBoardAffectationsComponent implements OnInit {
 
-  cmpt = 0
-
-  search: string = "";
-
   totalLength: any;
   page: number = 1;
 
